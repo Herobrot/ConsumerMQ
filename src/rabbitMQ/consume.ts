@@ -20,7 +20,7 @@ const onMessage = async (msg: ConsumeMessage | null): Promise<void> => {
         const contenido = msg.content.toString();
         signale.success("Se ha consumido el usuario: ", contenido);
         try {          
-          await fetch('http://localhost:8001/user', {
+          await fetch(process.env.SUBSCRIBE_URL!.toString() + '/user', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: contenido
