@@ -1,20 +1,17 @@
 import { Connection, connect, Channel, ConsumeMessage } from 'amqplib';
 import signale from 'signale';
 
-const connection = async () => {
+const connection = async (): Promise<void> => {
     const conn: Connection = await connect(process.env.AMQP_URL!.toString()); 
     try {
         const queue = "initial";
         const channel: Channel = await conn.createChannel();
         await channel.assertQueue(queue, { durable: true });
         await channel.consume(queue, (msg) => onMessage(msg), { noAck: true });
-        
-        signale.success('Se ha consumido correctamente');
-        
-
+        signale.success('Se ha conectado para consumir la cola');        
       } catch (error) {
         signale.fatal(new Error('Error al consumir la cola en RabbitMQ:'));
-        return null;
+        setTimeout(() => connection(), 5000);
       }
 }
 
